@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './App.css';
 
 type Weather = {
   "coord": {
@@ -31,9 +30,6 @@ type Weather = {
     "deg": number,
     "gust": number
   },
-  "rain": {
-    "1h": number
-  },
   "clouds": {
     "all": number
   },
@@ -61,7 +57,7 @@ function App() {
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter"){
+    if (e.key === "Enter") {
       e.preventDefault();
       fetchData();
     }
@@ -75,7 +71,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="serachContainer">
+      <div className="searchContainer">
         <form className="searchForm">
           <input
             type="text"
@@ -87,18 +83,26 @@ function App() {
         </form>
         <button className="searchButton" onClick={() => fetchData()}>Search</button>
       </div>
-      <div>
-        {weatherData == null ?
-          <p>No city selected</p>
-          :
-          <div className="weatherDataContainer">
-            <p>{weatherData.name}</p>
-            <p>{weatherData.weather[0].main}</p>
-            <p>{weatherData.main.temp + " °C"}</p>
-            <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt="Weather image" />
+      {weatherData == null ?
+        <p>No city selected</p>
+        :
+        <div className="weatherContainer">
+          <div className="cityDetails">
+            <h1 className="cityName">{weatherData.name}</h1>
+            <p>{weatherData.sys.country}</p>
           </div>
-        }
-      </div>
+          <div className="weatherDataMain">
+            <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt="Weather logo" />
+            <p>{weatherData.weather[0].description}</p>
+          </div>
+          <h2>Details</h2>
+          <div className="weatherDataDetails">
+            <p>{"Temperature : " + weatherData.main.temp + " °C"}</p>
+            <p>{"Wind speed : " + weatherData.wind.speed + " m/s"}</p>
+            <p>{"Humidity : " + weatherData.main.humidity + " %"}</p>
+          </div>
+        </div>
+      }
     </div>
   );
 }
