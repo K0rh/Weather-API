@@ -47,6 +47,8 @@ type Weather = {
   "cod": number
 };
 
+const countries = require('country-data').countries;
+
 function App() {
   const [cityName, setCityName] = useState("");
   const [weatherData, setWeatherData] = useState<Weather | null>(null);
@@ -76,6 +78,7 @@ function App() {
           setErrorMessage(`No city named "${cityName}" in the database...`);
         }
       })
+      setCityName("");
   }
 
   function capitalizeFirst (str : String) {
@@ -84,9 +87,11 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Simple Weather App</h1>
       <div className="searchContainer">
         <form className="searchForm">
           <input
+            className="cityInput"
             type="text"
             placeholder="Enter city..."
             value={cityName}
@@ -100,18 +105,18 @@ function App() {
         <p className="error"> {errorMessage} </p>
       )}
       {weatherData == null ?
-        <p>No city selected</p>
+        <p>Please select a city</p>
         :
         <div className="weatherContainer">
           <div className="cityDetails">
-            <h1 className="cityName">{weatherData.name}</h1>
-            <p>{weatherData.sys.country}</p>
+            <h2 className="cityName">{weatherData.name}</h2>
+            <p className="countryName">({countries[weatherData.sys.country].name})</p>
           </div>
           <div className="weatherDataMain">
             <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt="Weather logo" />
             <p>{capitalizeFirst(weatherData.weather[0].description)}</p>
           </div>
-          <h2>Details</h2>
+          <h3>Details</h3>
           <div className="weatherDataDetails">
             <p>{"Temperature : " + weatherData.main.temp + " °C"}</p>
             <p>{"Wind speed : " + weatherData.wind.speed + " m/s"}</p>
