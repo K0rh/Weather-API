@@ -50,10 +50,13 @@ type Weather = {
 function App() {
   const [cityName, setCityName] = useState("");
   const [weatherData, setWeatherData] = useState<Weather | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const apiKey = "e5a7da137bfa07cb609ceb9e8957b235";
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setCityName(e.target.value);
+    setErrorMessage("");
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -65,8 +68,18 @@ function App() {
 
   function fetchData() {
     fetch("https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=metric&appid=" + apiKey)
-      .then(response => response.json())
-      .then(data => setWeatherData(data));
+      .then(response => {
+        if (response.ok) {
+          response.json().then(data => setWeatherData(data));
+        }
+        else {
+          setErrorMessage(`No city named "${cityName}" in the database...`);
+        }
+      })
+  }
+
+  function capitalizeFirst (str : String) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   return (
@@ -83,6 +96,9 @@ function App() {
         </form>
         <button className="searchButton" onClick={() => fetchData()}>Search</button>
       </div>
+      {errorMessage && (
+        <p className="error"> {errorMessage} </p>
+      )}
       {weatherData == null ?
         <p>No city selected</p>
         :
@@ -93,7 +109,7 @@ function App() {
           </div>
           <div className="weatherDataMain">
             <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt="Weather logo" />
-            <p>{weatherData.weather[0].description}</p>
+            <p>{capitalizeFirst(weatherData.weather[0].description)}</p>
           </div>
           <h2>Details</h2>
           <div className="weatherDataDetails">
