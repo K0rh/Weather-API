@@ -120,15 +120,24 @@ h1, p {
 }
 
 @media screen and (max-width: 600px) {
+  .App {
+    width: 80%;
+    border-radius: 40px;
+  }
+  
   h1 {
-    font-size: 18pt;
+    font-size: 14pt;
   }
 
   h2 {
-    font-size: 16pt;
+    font-size: 12pt;
   }
 
   h3 {
-    font-size: 14pt;
+    font-size: 10pt;
+  }
+
+  p, .cityInput, .searchButton {
+    font-size: 8pt;
   }
 }
